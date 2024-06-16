@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:fourth_project/models/expense.dart';
 
 class NewExpense extends StatefulWidget {
-  const NewExpense({super.key});
+  const NewExpense({super.key, required this.onAddExpense});
+
+  final void Function(Expense expense) onAddExpense;
 
   @override
   State<NewExpense> createState() {
@@ -14,7 +16,7 @@ class _NewExpenseState extends State<NewExpense> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   DateTime? selectDate;
-  late var dropdownValue = Category.food;
+  Category _selectedCategory = Category.food;
 
   void _presentDatePicker() async {
     var now = DateTime.now();
@@ -52,6 +54,13 @@ class _NewExpenseState extends State<NewExpense> {
             );
           });
     }
+    widget.onAddExpense(
+      Expense(
+          title: _titleController.text,
+          amount: enteredAmount!,
+          data: selectDate!,
+          category: _selectedCategory),
+    );
   }
 
   @override
@@ -93,7 +102,6 @@ class _NewExpenseState extends State<NewExpense> {
               ),
               Row(
                 children: [
-                  // const Text('Selected Date'),
                   Text(selectDate != null
                       ? formatter.format((selectDate) as DateTime)
                       : "select Date"),
@@ -108,14 +116,14 @@ class _NewExpenseState extends State<NewExpense> {
           Row(
             children: [
               DropdownButton(
-                value: dropdownValue,
+                value: _selectedCategory,
                 items: Category.values.map((category) {
                   return DropdownMenuItem(
                       value: category, child: Text(category.name.toString()));
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
-                    dropdownValue = value!;
+                    _selectedCategory = value!;
                   });
                 },
               ),
