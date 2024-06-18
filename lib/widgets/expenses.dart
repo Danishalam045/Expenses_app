@@ -45,9 +45,25 @@ class _ExpnesesState extends State<Expenses> {
   }
 
   void _removeExpense(Expense expense) {
+    final expenseIndex = _registeredExpneses.indexOf(expense);
     setState(() {
       _registeredExpneses.remove(expense);
     });
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text("Item deleted"),
+        duration: const Duration(seconds: 3),
+        action: SnackBarAction(
+          label: "UNDO",
+          onPressed: () {
+            setState(() {
+              _registeredExpneses.insert(expenseIndex, expense);
+            });
+          },
+        ),
+      ),
+    );
   }
 
   @override
@@ -56,7 +72,17 @@ class _ExpnesesState extends State<Expenses> {
       child: Text("No expense found, Start adding some!"),
     );
 
-    if (_registeredExpneses.isNotEmpty) {}
+    if (_registeredExpneses.isNotEmpty) {
+      mainContent = Column(
+        children: [
+          const Text("The chart"),
+          ExpensesList(
+            expenses: _registeredExpneses,
+            removeExpense: _removeExpense,
+          )
+        ],
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter Expenses Tracker'),
@@ -67,15 +93,7 @@ class _ExpnesesState extends State<Expenses> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          const Text("The chart"),
-          ExpensesList(
-            expenses: _registeredExpneses,
-            removeExpense: _removeExpense,
-          )
-        ],
-      ),
+      body: mainContent,
     );
   }
 }
