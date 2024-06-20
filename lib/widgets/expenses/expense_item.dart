@@ -11,9 +11,13 @@ class ExpneseItem extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.all(2.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(expense.title),
+          Text(
+            expense.title,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
           Row(
             children: [
               Text((expense.amount).toString()),
