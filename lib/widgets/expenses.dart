@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fourth_project/models/expense.dart';
+import 'package:fourth_project/widgets/chart/chart.dart';
 import 'package:fourth_project/widgets/expenses/expenses_list.dart';
 import 'package:fourth_project/widgets/new_expense.dart';
 
@@ -75,7 +76,7 @@ class _ExpnesesState extends State<Expenses> {
     if (_registeredExpneses.isNotEmpty) {
       mainContent = Column(
         children: [
-          const Text("The chart"),
+          Chart(expenses: _registeredExpneses),
           ExpensesList(
             expenses: _registeredExpneses,
             removeExpense: _removeExpense,
